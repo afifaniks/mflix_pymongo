@@ -1,0 +1,6 @@
+.ini
+venv/
+venv/*
+mflix_venv/
+mflix_venv/*
+
