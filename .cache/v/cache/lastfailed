@@ -1,4 +1,6 @@
 {
+  "tests/test_get_comments.py::test_fetch_comments_for_another_movie": true,
+  "tests/test_get_comments.py::test_fetch_comments_for_movie": true,
   "tests/test_projection.py::test_basic_country_search_db": true,
   "tests/test_projection.py::test_basic_country_search_shape_db": true
 }

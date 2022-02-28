@@ -158,7 +158,7 @@ def get_movies_faceted(filters, page, movies_per_page):
     pipeline.append(limit_stage)
     pipeline.append(facet_stage)
 
-    try:
+    try:	
         movies = list(db.movies.aggregate(pipeline, allowDiskUse=True))[0]
         count = list(db.movies.aggregate(counting, allowDiskUse=True))[
             0].get("count")
@@ -269,7 +269,29 @@ def get_movie(id):
                 "$match": {
                     "_id": ObjectId(id)
                 }
-            }
+            },
+            {
+		    "$lookup": {
+			"from": "comments",
+			"let": {
+			    "id": "$_id"
+			},
+			"pipeline": [{
+				"$match": {
+				    "$expr": {
+				        "$eq": ["$movie_id", "$$id"]
+				    }
+				}
+			    },
+			    {
+				"$sort": {
+				    "comments.date": 1
+				}
+			    }
+			],
+			"as": "comments"
+		    }
+	    }
         ]
 
         movie = db.movies.aggregate(pipeline).next()
@@ -510,8 +532,8 @@ def update_prefs(email, prefs):
         # TODO: User preferences
         # Use the data in "prefs" to update the user's preferences.
         response = db.users.update_one(
-            { "some_field": "some_value" },
-            { "$set": { "some_other_field": "some_other_value" } }
+            { "email": email },
+            { "$set": { "preferences": prefs } }
         )
         if response.matched_count == 0:
             return {'error': 'no user found'}
