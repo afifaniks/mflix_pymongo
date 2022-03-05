@@ -196,8 +196,8 @@ def api_update_comment():
         edit_result = update_comment(
             comment_id, user_email, updated_comment, datetime.now()
         )
-        if edit_result.modified_count == 0:
-            raise ValueError("no document updated")
+        # if edit_result.modified_count == 0:
+        #     raise ValueError("no document updated")
         updated_comments = get_movie(movie_id).get('comments')
         return jsonify({"comments": updated_comments}), 200
     except Exception as e:
